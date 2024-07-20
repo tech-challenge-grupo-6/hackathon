@@ -26,3 +26,10 @@ public enum EstadoConsulta
     Realizada,
     Cancelada
 }
+
+public record ConsultaInput(Guid PacienteId, Guid HoraId, Guid ProntuarioId, EstadoConsulta Estado);
+
+public record ConsultaOutput(Guid Id, string LinkTeleconsulta, Guid PacienteId, Guid HoraId, Guid ProntuarioId, EstadoConsulta Estado)
+{
+    public static explicit operator ConsultaOutput(Consulta consulta) => new(consulta.Id, consulta.LinkTeleconsulta, consulta.PacienteId, consulta.HoraId, consulta.ProntuarioId, consulta.Estado);
+}
