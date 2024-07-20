@@ -12,7 +12,6 @@ public class ProntuarioMapping : IEntityTypeConfiguration<Prontuario>
         builder.HasOne(prontuario => prontuario.Paciente)
             .WithMany(paciente => paciente.Prontuarios)
             .HasForeignKey(prontuario => prontuario.PacienteId);
-        builder.HasOne(prontuario => prontuario.Consulta);
         builder.HasMany(prontuario => prontuario.Arquivos);
     }
 }
