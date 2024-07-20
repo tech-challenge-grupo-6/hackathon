@@ -5,6 +5,14 @@ namespace ControladorConsulta.Services;
 
 public class MedicoService(IMedicoRepository medicoRepository) : IMedicoService
 {
+    public async Task<MedicoOutput?> AtualizarAsync(Guid id, MedicoInput medicoInput)
+    {
+        var medico = (Medico)medicoInput;
+        medico.Id = id;
+        var medicoAtualizado = await medicoRepository.AtualizarAsync(medico);
+        return medicoAtualizado != null ? (MedicoOutput)medicoAtualizado : null;
+    }
+
     public async Task<Guid> InserirAsync(MedicoInput medicoInput)
     {
         var medico = (Medico)medicoInput;
@@ -15,6 +23,12 @@ public class MedicoService(IMedicoRepository medicoRepository) : IMedicoService
     public async Task<MedicoOutput?> ObterPorIdAsync(Guid id)
     {
         var medico = await medicoRepository.ObterPorIdAsync(id);
+        return medico != null ? (MedicoOutput)medico : null;
+    }
+
+    public async Task<MedicoOutput?> RemoverAsync(Guid id)
+    {
+        var medico = await medicoRepository.RemoverAsync(id);
         return medico != null ? (MedicoOutput)medico : null;
     }
 }

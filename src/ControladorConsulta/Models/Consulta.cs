@@ -11,8 +11,18 @@ public class Consulta
     public Guid ProntuarioId { get; set; }
     public virtual Prontuario Prontuario { get; set; } = null!;
 
+    public EstadoConsulta Estado { get; set; }
+
     public void GenerateLinkTeleconsulta()
     {
         LinkTeleconsulta = $"https://teleconsulta.com/{Id}";
     }
+}
+
+public enum EstadoConsulta
+{
+    Confirmada,
+    Recusada,
+    Realizada,
+    Cancelada
 }

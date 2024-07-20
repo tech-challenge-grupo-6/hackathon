@@ -17,5 +17,6 @@ public class ConsultaMapping : IEntityTypeConfiguration<Consulta>
             .WithMany(paciente => paciente.Consultas)
             .HasForeignKey(consulta => consulta.PacienteId);
         builder.HasOne(consulta => consulta.Horario);
+        builder.Property(consulta => consulta.Estado);
     }
 }

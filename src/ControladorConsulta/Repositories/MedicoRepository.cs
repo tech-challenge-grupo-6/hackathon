@@ -6,6 +6,20 @@ namespace ControladorConsulta.Repositories;
 
 public class MedicoRepository(DatabaseContext databaseContext) : IMedicoRepository
 {
+    public async Task<Medico?> AtualizarAsync(Medico medico)
+    {
+        var medicoAtual = await ObterPorIdAsync(medico.Id);
+        if (medicoAtual is not null)
+        {
+            medicoAtual.Nome = medico.Nome;
+            medicoAtual.Crm = medico.Crm;
+            medicoAtual.Especialidade = medico.Especialidade;
+            await databaseContext.SaveChangesAsync();
+            return medicoAtual;
+        }
+        return null;
+    }
+
     public async Task<Guid> InserirAsync(Medico medico)
     {
         databaseContext.Medicos.Add(medico);
@@ -17,5 +31,17 @@ public class MedicoRepository(DatabaseContext databaseContext) : IMedicoReposito
     {
         return await databaseContext.Medicos
             .FirstOrDefaultAsync(medico => medico.Id == id);
+    }
+
+    public async Task<Medico?> RemoverAsync(Guid id)
+    {
+        var medicoAtual = await ObterPorIdAsync(id);
+        if (medicoAtual is not null)
+        {
+            databaseContext.Medicos.Remove(medicoAtual);
+            await databaseContext.SaveChangesAsync();
+            return medicoAtual;
+        }
+        return null;
     }
 }
