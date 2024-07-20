@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLogging();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication("Bearer").AddJwtBearer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "Controlador Consta", Version = "v1" });
@@ -57,6 +59,7 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseAuthorization();
 app.UseExceptionHandler(exceptionHandlerApp
     => exceptionHandlerApp.Run(async context
         => await Results.Problem()
@@ -64,7 +67,8 @@ app.UseExceptionHandler(exceptionHandlerApp
 
 var medico = app.MapGroup("medico")
     .WithTags("Medico")
-    .WithOpenApi();
+    .WithOpenApi()
+    .RequireAuthorization();
 
 medico.MapGet("/{id}", async (IMedicoService medicoService, Guid Id) =>
 {
@@ -112,7 +116,8 @@ medico.MapDelete("/{id}", async (IMedicoService medicoService, Guid Id) =>
 
 var paciente = app.MapGroup("paciente")
     .WithTags("Paciente")
-    .WithOpenApi();
+    .WithOpenApi()
+    .RequireAuthorization();
 
 paciente.MapGet("/{id}", async (IPacienteService pacienteService, Guid Id) =>
 {
@@ -160,7 +165,8 @@ paciente.MapDelete("/{id}", async (IPacienteService pacienteService, Guid Id) =>
 
 var agenda = app.MapGroup("agenda")
     .WithTags("Agenda")
-    .WithOpenApi();
+    .WithOpenApi()
+    .RequireAuthorization();
 
 agenda.MapGet("/{id}", async (IAgendaService agendaService, Guid Id) =>
 {
@@ -208,7 +214,8 @@ agenda.MapDelete("/{id}", async (IAgendaService agendaService, Guid Id) =>
 
 var arquivo = app.MapGroup("arquivo")
     .WithTags("Arquivo")
-    .WithOpenApi();
+    .WithOpenApi()
+    .RequireAuthorization();
 
 arquivo.MapGet("/{id}", async (IArquivoService arquivoService, Guid Id) =>
 {
@@ -256,7 +263,8 @@ arquivo.MapDelete("/{id}", async (IArquivoService arquivoService, Guid Id) =>
 
 var prontuario = app.MapGroup("prontuario")
     .WithTags("Prontuario")
-    .WithOpenApi();
+    .WithOpenApi()
+    .RequireAuthorization();
 
 prontuario.MapGet("/{id}", async (IProntuarioService prontuarioService, Guid Id) =>
 {
@@ -304,7 +312,8 @@ prontuario.MapDelete("/{id}", async (IProntuarioService prontuarioService, Guid 
 
 var horario = app.MapGroup("horario")
     .WithTags("Horario")
-    .WithOpenApi();
+    .WithOpenApi()
+    .RequireAuthorization();
 
 horario.MapGet("/{id}", async (IHorarioService horarioService, Guid Id) =>
 {
@@ -352,7 +361,8 @@ horario.MapDelete("/{id}", async (IHorarioService horarioService, Guid Id) =>
 
 var consulta = app.MapGroup("consulta")
     .WithTags("Consulta")
-    .WithOpenApi();
+    .WithOpenApi()
+    .RequireAuthorization();
 
 consulta.MapGet("/{id}", async (IConsultaService consultaService, Guid Id) =>
 {
