@@ -48,6 +48,7 @@ public class ConsultaService(
             HoraId = consultaInput.HoraId,
             Estado = consultaInput.Estado
         };
+        consulta.GenerateLinkTeleconsulta();
         return await consultaRepository.InserirAsync(consulta);
     }
 

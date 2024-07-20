@@ -1,7 +1,7 @@
 ﻿using ControladorConsulta.Models;
-using ControladorConsulta.Services;
+using ControladorConsulta.Repositories;
 
-namespace ControladorConsulta.Repositories;
+namespace ControladorConsulta.Services;
 
 public class HorarioService(
     IHorarioRepository horarioRepository,
@@ -15,7 +15,7 @@ public class HorarioService(
         if (horarioAtual is not null)
         {
             var agenda = await agendaRepository.ObterPorIdAsync(horarioInput.AgendaId) ?? throw new ArgumentException("Agenda não encontrada");
-            var consulta = await consultaRepository.ObterPorIdAsync(horarioInput.ConsultaId) ?? throw new ArgumentException("Consulta não encontrada");
+            var consulta = await consultaRepository.ObterPorIdAsync(horarioInput.ConsultaId);
 
             horarioAtual.Agenda = agenda;
             horarioAtual.AgendaId = horarioInput.AgendaId;
@@ -31,7 +31,7 @@ public class HorarioService(
     public async Task<Guid> InserirAsync(HorarioInput horarioInput)
     {
         var agenda = await agendaRepository.ObterPorIdAsync(horarioInput.AgendaId) ?? throw new ArgumentException("Agenda não encontrada");
-        var consulta = await consultaRepository.ObterPorIdAsync(horarioInput.ConsultaId) ?? throw new ArgumentException("Consulta não encontrada");
+        var consulta = await consultaRepository.ObterPorIdAsync(horarioInput.ConsultaId);
         var horario = new Horario
         {
             Data = horarioInput.Data,
