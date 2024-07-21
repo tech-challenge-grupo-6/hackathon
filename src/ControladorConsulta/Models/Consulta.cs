@@ -15,7 +15,7 @@ public class Consulta
 
     public void GenerateLinkTeleconsulta()
     {
-        LinkTeleconsulta = $"https://teleconsulta.com/{Id}";
+        LinkTeleconsulta = $"https://teleconsulta.com/{Guid.NewGuid()}";
     }
 }
 
