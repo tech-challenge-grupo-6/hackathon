@@ -58,6 +58,8 @@ builder.Services.AddScoped<IConsultaRepository, ConsultaRepository>();
 builder.Services.AddScoped<IConsultaService, ConsultaService>();
 builder.Services.AddScoped<IAvaliacaoService, AvaliacaoService>();
 builder.Services.AddScoped<IAvaliacaoRepository, AvaliacaoRepository>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -460,6 +462,26 @@ avaliacao.MapPost("/", async (IAvaliacaoService avaliacaoService, AvaliacaoInput
     return Results.Created("/", new { id });
 })
 .WithName("Inserir avaliacao")
+.WithOpenApi();
+
+var login = app.MapGroup("")
+    .WithTags("Login")
+    .WithOpenApi();
+
+login.MapPost("cadastrar/", async (ILoginService loginService, Login login) =>
+{
+    var response = await loginService.CadastrarAsync(login);
+    return Results.Created("/", new { response });
+})
+.WithName("Cadastrar usuario")
+.WithOpenApi();
+
+login.MapPost("login/", async (ILoginService loginService, Login login) =>
+{
+    var response = await loginService.EfetuarLoginAsync(login);
+    return Results.Created("/", new { response });
+})
+.WithName("Login")
 .WithOpenApi();
 
 app.Run();

@@ -14,6 +14,7 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
     public DbSet<Prontuario> Prontuarios { get; set; } = null!;
     public DbSet<Arquivo> Arquivos { get; set; } = null!;
     public DbSet<Avaliacao> Avaliacoes { get; set; } = null!;
+    public DbSet<Login> Logins { get; set; } = null!;
 
     override protected void OnModelCreating(ModelBuilder modelBuilder)
     {
