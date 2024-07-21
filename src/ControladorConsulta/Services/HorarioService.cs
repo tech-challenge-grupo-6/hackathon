@@ -5,8 +5,7 @@ namespace ControladorConsulta.Services;
 
 public class HorarioService(
     IHorarioRepository horarioRepository,
-    IAgendaRepository agendaRepository,
-    IConsultaRepository consultaRepository)
+    IAgendaRepository agendaRepository)
     : IHorarioService
 {
     public async Task<HorarioOutput?> AtualizarAsync(Guid id, HorarioInput horarioInput)
@@ -15,13 +14,10 @@ public class HorarioService(
         if (horarioAtual is not null)
         {
             var agenda = await agendaRepository.ObterPorIdAsync(horarioInput.AgendaId) ?? throw new ArgumentException("Agenda não encontrada");
-            var consulta = await consultaRepository.ObterPorIdAsync(horarioInput.ConsultaId);
 
             horarioAtual.Agenda = agenda;
             horarioAtual.AgendaId = horarioInput.AgendaId;
             horarioAtual.Data = horarioInput.Data;
-            horarioAtual.Consulta = consulta;
-            horarioAtual.ConsultaId = horarioInput.ConsultaId;
             await horarioRepository.AtualizarAsync(horarioAtual);
             return (HorarioOutput)horarioAtual;
         }
@@ -31,14 +27,11 @@ public class HorarioService(
     public async Task<Guid> InserirAsync(HorarioInput horarioInput)
     {
         var agenda = await agendaRepository.ObterPorIdAsync(horarioInput.AgendaId) ?? throw new ArgumentException("Agenda não encontrada");
-        var consulta = await consultaRepository.ObterPorIdAsync(horarioInput.ConsultaId);
         var horario = new Horario
         {
             Data = horarioInput.Data,
             Agenda = agenda,
-            AgendaId = horarioInput.AgendaId,
-            Consulta = consulta,
-            ConsultaId = horarioInput.ConsultaId
+            AgendaId = horarioInput.AgendaId
         };
         return await horarioRepository.InserirAsync(horario);
     }

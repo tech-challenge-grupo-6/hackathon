@@ -10,7 +10,7 @@ public class Horario
     public virtual Consulta? Consulta { get; set; } = null!;
 }
 
-public record HorarioInput(DateTime Data, Guid AgendaId, Guid ConsultaId);
+public record HorarioInput(DateTime Data, Guid AgendaId);
 
 public record HorarioOutput(Guid Id, DateTime Data, Guid AgendaId, Guid? ConsultaId)
 {
