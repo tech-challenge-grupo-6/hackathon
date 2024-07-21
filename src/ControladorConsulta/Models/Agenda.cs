@@ -1,4 +1,6 @@
-﻿namespace ControladorConsulta.Models;
+﻿using ControladorConsulta.Models.Medicos;
+
+namespace ControladorConsulta.Models;
 
 public class Agenda
 {

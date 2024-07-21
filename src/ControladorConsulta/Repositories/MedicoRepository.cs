@@ -1,5 +1,5 @@
 ﻿using ControladorConsulta.Database;
-using ControladorConsulta.Models;
+using ControladorConsulta.Models.Medicos;
 using Microsoft.EntityFrameworkCore;
 
 namespace ControladorConsulta.Repositories;
@@ -25,6 +25,12 @@ public class MedicoRepository(DatabaseContext databaseContext) : IMedicoReposito
         databaseContext.Medicos.Add(medico);
         await databaseContext.SaveChangesAsync();
         return medico.Id;
+    }
+
+    public async Task<Medico?> ObterPorEspecialidadeAsync(string especialidade)
+    {
+        return await databaseContext.Medicos
+            .FirstOrDefaultAsync(medico => medico.Especialidade == especialidade);
     }
 
     public async Task<Medico?> ObterPorIdAsync(Guid id)

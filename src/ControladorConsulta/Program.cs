@@ -1,9 +1,11 @@
 using ControladorConsulta.Database;
 using ControladorConsulta.Models;
+using ControladorConsulta.Models.Medicos;
 using ControladorConsulta.Repositories;
 using ControladorConsulta.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +56,13 @@ builder.Services.AddScoped<IHorarioRepository, HorarioRepository>();
 builder.Services.AddScoped<IHorarioService, HorarioService>();
 builder.Services.AddScoped<IConsultaRepository, ConsultaRepository>();
 builder.Services.AddScoped<IConsultaService, ConsultaService>();
+builder.Services.AddScoped<IAvaliacaoService, AvaliacaoService>();
+builder.Services.AddScoped<IAvaliacaoRepository, AvaliacaoRepository>();
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.SerializerOptions.WriteIndented = true;
+});
 
 var app = builder.Build();
 
@@ -80,6 +89,18 @@ medico.MapGet("/{id}", async (IMedicoService medicoService, Guid Id) =>
     };
 })
 .WithName("Obter Medico")
+.WithOpenApi();
+
+medico.MapGet("especialidade/{especialidade}", async (IMedicoService medicoService, string especialidade) =>
+{
+    var medicoOutput = await medicoService.ObterPorEspecialidadeAsync(especialidade);
+    return medicoOutput switch
+    {
+        null => Results.NotFound(),
+        _ => Results.Ok(medicoOutput)
+    };
+})
+.WithName("Obter Medico por especialidade")
 .WithOpenApi();
 
 medico.MapPost("/", async (IMedicoService medicoService, MedicoInput medicoInput) =>
@@ -414,6 +435,31 @@ consulta.MapPatch("/{id}/estado", async (IConsultaService consultaService, Guid 
     return result ? Results.NoContent() : Results.NotFound();
 })
 .WithName("Mudar Estado Consulta")
+.WithOpenApi();
+
+var avaliacao = app.MapGroup("avaliacao")
+    .WithTags("Avaliacao")
+    .WithOpenApi()
+    .RequireAuthorization();
+
+avaliacao.MapGet("/{atendimento}", async (IAvaliacaoService avaliacaoService, Atendimento atendimento) =>
+{
+    var avaliacaoOutput = await avaliacaoService.RetornaMedicoPorAvaliacaoAsync(atendimento);
+    return avaliacaoOutput switch
+    {
+        null => Results.NotFound(),
+        _ => Results.Ok(avaliacaoOutput)
+    };
+})
+.WithName("Obter Medico por avaliacao")
+.WithOpenApi();
+
+avaliacao.MapPost("/", async (IAvaliacaoService avaliacaoService, AvaliacaoInput avaliacao) =>
+{
+    Guid id = await avaliacaoService.InserirAsync(avaliacao);
+    return Results.Created("/", new { id });
+})
+.WithName("Inserir avaliacao")
 .WithOpenApi();
 
 app.Run();
