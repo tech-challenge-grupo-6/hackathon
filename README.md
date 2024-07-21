@@ -26,12 +26,152 @@ Para viabilizar o desenvolvimento de um sistema que esteja em conformidade com a
 3. Execute o comando `docker-compose up --build`
 4. Acesse a URL `http://localhost:5005/swagger/index.html`
 
+## Como fazer deploy AWS
+- Rodar o Github Action: *Build and Deploy AWS* localizado na pasta `.github/workflows/release-aws.yml`
+
 ## Tecnologias utilizadas
 - ASP.NET Core 8.0
 
-## Autenticação
-É possível gerar um token JWT para autenticação, para isso é necessário rodar o comando abaixo:
+## Documentação
 
+- Cadastro:
 ```bash
-dotnet user-jwts create
+curl -X 'POST' \
+  'http://localhost:5005/cadastrar' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "crm": "string",
+  "senha": "string",
+  "email": "string",
+  "cpf": "string",
+  "tipo": 0
+}'
+```
+
+- Login
+```bash
+curl -X 'POST' \
+  'http://localhost:5005/login' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "crm": "string",
+  "senha": "string",
+  "email": "string",
+  "cpf": "string",
+  "tipo": 0
+}'
+```
+
+- Castro Médico
+```bash
+curl -X 'POST' \
+  'http://localhost:5005/medico' \
+  -H 'accept: */*' \
+  -H 'Authorization: Bearer <Token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "nome": "string",
+  "crm": "string",
+  "especialidade": "string"
+}'
+```
+
+- Castro Paciente
+```bash
+curl -X 'POST' \
+  'http://localhost:5005/paciente' \
+  -H 'accept: */*' \
+  -H 'Authorization: Bearer <Token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "nome": "string",
+  "cpf": "string",
+  "email": "string",
+  "telefone": "string"
+}'
+```
+
+- Cadstro Arquivo
+```bash
+curl -X 'POST' \
+  'http://localhost:5005/arquivo' \
+  -H 'accept: */*' \
+  -H 'Authorization: Bearer <Token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "nome": "string",
+  "url": "string",
+  "acessivel": true,
+  "epiracaoAcesso": "2024-07-21T19:26:04.568Z"
+}'
+```
+
+- Cadastro Prontuário
+```bash
+curl -X 'POST' \
+  'http://localhost:5005/prontuario' \
+  -H 'accept: */*' \
+  -H 'Authorization: Bearer <Token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "pacienteId": "5e411a96-0a70-499c-841c-69d115402be8",
+  "arquivosIds": [
+    "d515fba7-04f2-4cfd-99ab-a3c279ef9363"
+  ]
+}'
+```
+
+- Cadastro Agenda
+```bash
+curl -X 'POST' \
+  'http://localhost:5005/agenda' \
+  -H 'accept: */*' \
+  -H 'Authorization: Bearer <Token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "medicoId": "1155fdf4-f708-4c94-ab71-12bbc8c2f79e",
+  "horariosIds": [
+    
+  ]
+}'
+```
+
+- Cadastro Horário
+```bash
+curl -X 'POST' \
+  'http://localhost:5005/horario' \
+  -H 'accept: */*' \
+  -H 'Authorization: Bearer <Token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": "2024-07-21T19:26:56.355Z",
+  "agendaId": "9c6a5f11-c8f2-48e5-9326-8094ab70f99d"
+}'
+```
+
+- Cadastro Consulta
+```bash
+curl -X 'POST' \
+  'http://localhost:5005/consulta' \
+  -H 'accept: */*' \
+  -H 'Authorization: Bearer <Token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "pacienteId": "5e411a96-0a70-499c-841c-69d115402be8",
+  "horaId": "365b0273-5b98-46ab-ae39-1cf76ee7cd51",
+  "prontuarioId": "99a7d5d8-f17e-42ed-876b-0f806f417ce2",
+  "estado": 0
+}'
+```
+
+- Confirmar Consulta
+```bash
+curl -X 'PATCH' \
+  'http://localhost:5005/consulta/2444bf84-b346-4cb7-9b25-95e256e18550/estado?estado=0' \
+  -H 'accept: */*' \
+  -H 'Authorization: Bearer <Token>'
 ```
