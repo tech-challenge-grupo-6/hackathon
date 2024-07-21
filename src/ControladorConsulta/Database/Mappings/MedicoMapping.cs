@@ -1,4 +1,5 @@
 ﻿using ControladorConsulta.Models;
+using ControladorConsulta.Models.Medicos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,5 +16,9 @@ public class MedicoMapping : IEntityTypeConfiguration<Medico>
         builder.HasOne(medico => medico.Agenda)
             .WithOne(agenda => agenda.Medico)
             .HasForeignKey<Agenda>(agenda => agenda.MedicoId);
+        builder.HasMany(medico => medico.Avaliacoes)
+            .WithOne(avaliacao => avaliacao.Medico)
+            .HasForeignKey(avaliacao => avaliacao.MedicoId)
+            .IsRequired();
     }
 }

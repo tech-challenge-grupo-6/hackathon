@@ -1,4 +1,4 @@
-﻿using ControladorConsulta.Models;
+﻿using ControladorConsulta.Models.Medicos;
 using ControladorConsulta.Repositories;
 
 namespace ControladorConsulta.Services;
@@ -18,6 +18,12 @@ public class MedicoService(IMedicoRepository medicoRepository) : IMedicoService
         var medico = (Medico)medicoInput;
         Guid id = await medicoRepository.InserirAsync(medico);
         return id;
+    }
+
+    public async Task<MedicoOutput?> ObterPorEspecialidadeAsync(string especialidade)
+    {
+        var medico = await medicoRepository.ObterPorEspecialidadeAsync(especialidade);
+        return medico != null ? (MedicoOutput)medico : null;
     }
 
     public async Task<MedicoOutput?> ObterPorIdAsync(Guid id)
