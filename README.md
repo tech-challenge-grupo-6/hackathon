@@ -66,7 +66,7 @@ curl -X 'POST' \
 }'
 ```
 
-- Castro Médico
+- Cadastro Médico
 ```bash
 curl -X 'POST' \
   'http://localhost:5005/medico' \
@@ -80,7 +80,7 @@ curl -X 'POST' \
 }'
 ```
 
-- Castro Paciente
+- Cadastro Paciente
 ```bash
 curl -X 'POST' \
   'http://localhost:5005/paciente' \
@@ -95,7 +95,7 @@ curl -X 'POST' \
 }'
 ```
 
-- Cadstro Arquivo
+- Cadastro Arquivo
 ```bash
 curl -X 'POST' \
   'http://localhost:5005/arquivo' \
