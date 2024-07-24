@@ -9,6 +9,7 @@ public class Medico
     public Guid AgendaId { get; set; }
     public virtual Agenda Agenda { get; set; } = null!;
     public virtual ICollection<Avaliacao> Avaliacoes { get; set; } = null!;
+    public virtual ICollection<DetalheConsulta> DetalheConsultas { get; set; } = null!;
 }
 
 public record MedicoInput(string Nome, string Crm, string Especialidade)
@@ -21,7 +22,7 @@ public record MedicoInput(string Nome, string Crm, string Especialidade)
     };
 }
 
-public record MedicoOutput(Guid Id, string Nome, string Crm, string Especialidade)
+public record MedicoOutput(Guid Id, string Nome, string Crm, string Especialidade, ICollection<DetalheConsulta> DetalheConsultas)
 {
-    public static explicit operator MedicoOutput(Medico medico) => new(medico.Id, medico.Nome, medico.Crm, medico.Especialidade);
+    public static explicit operator MedicoOutput(Medico medico) => new(medico.Id, medico.Nome, medico.Crm, medico.Especialidade, medico.DetalheConsultas);
 }

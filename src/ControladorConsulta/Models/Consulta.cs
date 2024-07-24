@@ -10,6 +10,7 @@ public class Consulta
     public virtual Horario Horario { get; set; } = null!;
     public Guid ProntuarioId { get; set; }
     public virtual Prontuario Prontuario { get; set; } = null!;
+    public Guid IdDetalheConsulta { get; set; }
 
     public EstadoConsulta Estado { get; set; }
 
@@ -27,9 +28,9 @@ public enum EstadoConsulta
     Cancelada
 }
 
-public record ConsultaInput(Guid PacienteId, Guid HoraId, Guid ProntuarioId, EstadoConsulta Estado);
+public record ConsultaInput(Guid PacienteId, Guid HoraId, Guid ProntuarioId, EstadoConsulta Estado, Guid DetalheConsulta);
 
-public record ConsultaOutput(Guid Id, string LinkTeleconsulta, Guid PacienteId, Guid HoraId, Guid ProntuarioId, EstadoConsulta Estado)
+public record ConsultaOutput(Guid Id, string LinkTeleconsulta, Guid PacienteId, Guid HoraId, Guid ProntuarioId, EstadoConsulta Estado, Guid DetalheConsulta)
 {
-    public static explicit operator ConsultaOutput(Consulta consulta) => new(consulta.Id, consulta.LinkTeleconsulta, consulta.PacienteId, consulta.HoraId, consulta.ProntuarioId, consulta.Estado);
+    public static explicit operator ConsultaOutput(Consulta consulta) => new(consulta.Id, consulta.LinkTeleconsulta, consulta.PacienteId, consulta.HoraId, consulta.ProntuarioId, consulta.Estado, consulta.IdDetalheConsulta);
 }
