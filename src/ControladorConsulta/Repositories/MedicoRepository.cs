@@ -40,6 +40,11 @@ public class MedicoRepository(DatabaseContext databaseContext) : IMedicoReposito
             .FirstOrDefaultAsync(medico => medico.Id == id);
     }
 
+    public async Task<IEnumerable<Medico?>> ObterTodosAsync()
+    {
+        return await databaseContext.Medicos.ToListAsync();
+    }
+
     public async Task<Medico?> RemoverAsync(Guid id)
     {
         var medicoAtual = await ObterPorIdAsync(id);

@@ -146,6 +146,18 @@ medico.MapGet("especialidade/{especialidade}", async (IMedicoService medicoServi
 .WithName("Obter Medico por especialidade")
 .WithOpenApi();
 
+medico.MapGet("distancia/", async (IMedicoService medicoService) =>
+{
+    var medicoOutput = await medicoService.ObterPorDistanciaAsync();
+    return medicoOutput switch
+    {
+        null => Results.NotFound(),
+        _ => Results.Ok(medicoOutput)
+    };
+})
+.WithName("Obter Medico por proximidade")
+.WithOpenApi();
+
 medico.MapPost("/", async (IMedicoService medicoService, MedicoInput medicoInput) =>
 {
     Guid id = await medicoService.InserirAsync(medicoInput);

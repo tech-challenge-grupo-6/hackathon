@@ -20,6 +20,14 @@ public class MedicoService(IMedicoRepository medicoRepository) : IMedicoService
         return id;
     }
 
+    public async Task<MedicoOutput?> ObterPorDistanciaAsync()
+    {
+        var result = await medicoRepository.ObterTodosAsync();
+        var medico = result.FirstOrDefault();
+
+        return (MedicoOutput)medico;
+    }
+
     public async Task<MedicoOutput?> ObterPorEspecialidadeAsync(string especialidade)
     {
         var medico = await medicoRepository.ObterPorEspecialidadeAsync(especialidade);
