@@ -19,6 +19,10 @@ public class MedicoMapping : IEntityTypeConfiguration<Medico>
         builder.HasMany(medico => medico.Avaliacoes)
             .WithOne(avaliacao => avaliacao.Medico)
             .HasForeignKey(avaliacao => avaliacao.MedicoId)
+            .IsRequired();  
+        builder.HasMany(medico => medico.DetalheConsultas)
+            .WithOne(detalheConsulta => detalheConsulta.Medico)
+            .HasForeignKey(detalheConsulta => detalheConsulta.MedicoId)
             .IsRequired();
     }
 }

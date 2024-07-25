@@ -36,7 +36,13 @@ public class MedicoRepository(DatabaseContext databaseContext) : IMedicoReposito
     public async Task<Medico?> ObterPorIdAsync(Guid id)
     {
         return await databaseContext.Medicos
+            .Include(medico => medico.DetalheConsultas)
             .FirstOrDefaultAsync(medico => medico.Id == id);
+    }
+
+    public async Task<IEnumerable<Medico?>> ObterTodosAsync()
+    {
+        return await databaseContext.Medicos.ToListAsync();
     }
 
     public async Task<Medico?> RemoverAsync(Guid id)

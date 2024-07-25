@@ -1,5 +1,6 @@
 using ControladorConsulta.Database;
 using ControladorConsulta.Models;
+using ControladorConsulta.Models.Dtos;
 using ControladorConsulta.Models.Medicos;
 using ControladorConsulta.Repositories;
 using ControladorConsulta.Services;
@@ -75,6 +76,8 @@ builder.Services.AddScoped<IAvaliacaoService, AvaliacaoService>();
 builder.Services.AddScoped<IAvaliacaoRepository, AvaliacaoRepository>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+builder.Services.AddScoped<IDetalheConsultaRepository, DetalheConsultaRepository>();
+builder.Services.AddScoped<IDetalheConsultaService, DetalheConsultaService>();
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -91,6 +94,20 @@ app.UseExceptionHandler(exceptionHandlerApp
         => await Results.Problem()
                      .ExecuteAsync(context)));
 
+var detalhe = app.MapGroup("detalhe")
+    .WithTags("Detalhe da consulta medica")
+    .WithOpenApi()
+    .RequireAuthorization();
+
+detalhe.MapPost("/", async (IDetalheConsultaService detalheConsultaService, DetalheConsultaInput detalheConsulta) =>
+{
+    var response = await detalheConsultaService.InserirAsync(detalheConsulta);
+    return Results.Ok(response);
+})
+.WithName("Cadastrar detalhe da consulta")
+.WithOpenApi();
+
+
 var medico = app.MapGroup("medico")
     .WithTags("Medico")
     .WithOpenApi()
@@ -99,10 +116,19 @@ var medico = app.MapGroup("medico")
 medico.MapGet("/{id}", async (IMedicoService medicoService, Guid Id) =>
 {
     var medicoOutput = await medicoService.ObterPorIdAsync(Id);
-    return medicoOutput switch
+    var detalhesOutput = medicoOutput.DetalheConsultas != null ? medicoOutput.DetalheConsultas.Select(x => new DetalheConsultaOutput(x.Valor, x.Descricao)).ToList() : [];
+    var response = new MedicoResponse()
+    {
+        Nome = medicoOutput.Nome,
+        Crm = medicoOutput.Crm,
+        Especialidade = medicoOutput.Especialidade,
+        DetalhesConsulta = detalhesOutput
+    };
+
+    return response switch
     {
         null => Results.NotFound(),
-        _ => Results.Ok(medicoOutput)
+        _ => Results.Ok(response)
     };
 })
 .WithName("Obter Medico")
@@ -118,6 +144,18 @@ medico.MapGet("especialidade/{especialidade}", async (IMedicoService medicoServi
     };
 })
 .WithName("Obter Medico por especialidade")
+.WithOpenApi();
+
+medico.MapGet("distancia/", async (IMedicoService medicoService) =>
+{
+    var medicoOutput = await medicoService.ObterPorDistanciaAsync();
+    return medicoOutput switch
+    {
+        null => Results.NotFound(),
+        _ => Results.Ok(medicoOutput)
+    };
+})
+.WithName("Obter Medico por proximidade")
 .WithOpenApi();
 
 medico.MapPost("/", async (IMedicoService medicoService, MedicoInput medicoInput) =>
@@ -434,14 +472,14 @@ consulta.MapPut("/{id}", async (IConsultaService consultaService, Guid Id, Consu
 .WithName("Atualizar Consulta")
 .WithOpenApi();
 
-consulta.MapDelete("/{id}", async (IConsultaService consultaService, Guid Id) =>
-{
-    var consultaOutput = await consultaService.RemoverAsync(Id);
-    return consultaOutput switch
+consulta.MapDelete("/{id}", async (IConsultaService consultaService, Guid Id, string Justificatuva = null) =>
     {
-        null => Results.NotFound(),
-        _ => Results.Ok(consultaOutput)
-    };
+        var consultaOutput = await consultaService.RemoverAsync(Id, Justificatuva);
+        return consultaOutput switch
+        {
+            null => Results.NotFound("Para deletar a consulta � necessario uma justificativa"),
+            _ => Results.Ok(consultaOutput)
+        };
 })
 .WithName("Remover Consulta")
 .WithOpenApi();

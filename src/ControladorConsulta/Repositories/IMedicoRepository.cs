@@ -9,4 +9,6 @@ public interface IMedicoRepository
     Task<Medico?> ObterPorEspecialidadeAsync(string especialidade);
     Task<Medico?> RemoverAsync(Guid id);
     Task<Medico?> AtualizarAsync(Medico medico);
+    Task<IEnumerable<Medico?>> ObterTodosAsync();
+
 }

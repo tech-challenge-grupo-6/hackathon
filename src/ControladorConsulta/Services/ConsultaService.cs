@@ -46,7 +46,8 @@ public class ConsultaService(
             PacienteId = consultaInput.PacienteId,
             Horario = horario,
             HoraId = consultaInput.HoraId,
-            Estado = consultaInput.Estado
+            Estado = consultaInput.Estado,
+            IdDetalheConsulta = consultaInput.DetalheConsulta,
         };
         consulta.GenerateLinkTeleconsulta();
         return await consultaRepository.InserirAsync(consulta);
@@ -69,9 +70,14 @@ public class ConsultaService(
         return consultas.Select(x => (ConsultaOutput)x);
     }
 
-    public async Task<ConsultaOutput?> RemoverAsync(Guid id)
+    public async Task<ConsultaOutput?> RemoverAsync(Guid id, string justificatica)
     {
-        var consulta = await consultaRepository.RemoverAsync(id);
-        return consulta is not null ? (ConsultaOutput)consulta : null;
+        if (!string.IsNullOrEmpty(justificatica)) 
+        { 
+            var consulta = await consultaRepository.RemoverAsync(id);
+            return consulta is not null ? (ConsultaOutput)consulta : throw new Exception();
+        }
+        return null;
+
     }
 }

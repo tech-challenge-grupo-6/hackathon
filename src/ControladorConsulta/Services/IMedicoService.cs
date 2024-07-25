@@ -9,4 +9,5 @@ public interface IMedicoService
     Task<MedicoOutput?> ObterPorEspecialidadeAsync(string especialidade);
     Task<MedicoOutput?> RemoverAsync(Guid id);
     Task<MedicoOutput?> AtualizarAsync(Guid id, MedicoInput medicoInput);
+    Task<MedicoOutput?> ObterPorDistanciaAsync();
 }
